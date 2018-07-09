@@ -1,0 +1,10 @@
+{
+    "information":
+    {
+        "category" : "application",
+        "name": "StereoCameraVR",
+        "author": "Younguk Kim <yukim@chic.re.kr>",
+        "version": "0.1",
+        "description": "Summer Crush MR Application"
+    }
+}
