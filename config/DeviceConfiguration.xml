@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interfacemap>
+    <image>
+        <enable>true</enable>
+        <inputinterface>vst_camera</inputinterface>
+        <outputinterface>Image1</outputinterface>
+        <fps>30</fps>
+        <pixel>RGB_LINEAR</pixel>
+        <width>1940</width>
+        <height>1212</height>
+        <usegltexturecoord>false</usegltexturecoord>
+        <stereo>true</stereo>
+    </image>
+</interfacemap>

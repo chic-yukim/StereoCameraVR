@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules>
+
+    <XiStream2>
+        <name>vst_camera</name>
+        <width>1940</width>
+        <height>1212</height>
+    </XiStream2>
+
+    <pinhole_camera>
+        <!-- HMD: LHR-24956881 -->
+        <stereo_camera>
+            <input_interface>vst_camera</input_interface>
+            <!-- newcam2 -->
+            <left>
+                <name>vstcamera</name>
+                <parameters>
+                    <intrinsic>
+                        912.0026119380731, -1.17229628735226, 991.4993377390352;
+                        0, 912.629252770049, 612.3931243693244;
+                        0, 0, 1
+                    </intrinsic>
+                    <dist_coeffs>
+                        -0.289880137877034;
+                        0.07943689893990046;
+                        -0.009479650346815281;
+                        -0.0003965257568670023;
+                        -0.0004955404502293374
+                    </dist_coeffs>
+                    <R>
+                        0.9999942343534544, 0.0008623608146301285, 0.003284447240276544;
+                        -0.0008679486478073068, 0.9999981778961579, 0.001700255718688842;
+                        -0.00328297502176596, -0.001703096647156321, 0.9999931607450209
+                    </R>
+                    <new_intrinsic>
+                        909, 0, 977.2093845381378;
+                        0, 909, 576.2236232513227;
+                        0, 0, 1
+                    </new_intrinsic>
+                </parameters>
+            </left>
+            <right>
+                <name>vstcamera2</name>
+                <parameters>
+                    <intrinsic>
+                        907.9944471909655, -1.122098151224788, 969.0414954048254;
+                        0, 908.6845445683221, 604.4671738652323;
+                        0, 0, 1
+                    </intrinsic>
+                    <dist_coeffs>
+                        -0.2872050475320747;
+                        0.07640192777213811;
+                        -0.008686290523645635;
+                        -0.0004005883876291205;
+                        9.919528130441322e-005
+                    </dist_coeffs>
+                    <R>
+                        0.9999746574122234, -0.001528167250939617, -0.006953361644539014;
+                        0.001516332576421641, 0.9999973935059421, -0.001706961288265271;
+                        0.006955952042982554, 0.001696374420671739, 0.9999743681940057
+                    </R>
+                    <new_intrinsic>
+                        909, 0, 985.7632148621713;
+                        0, 909, 576.2236232513227;
+                        0, 0, 1
+                    </new_intrinsic>
+                </parameters>
+            </right>
+            <enable_undistortion>true</enable_undistortion>
+        </stereo_camera>
+    </pinhole_camera>
+
+    <video_see_through>
+        <flip_y>false</flip_y>
+        <use_valid_vst_depth>false</use_valid_vst_depth>
+        <remove_occlusion>false</remove_occlusion>
+        <cameras>
+            <path>vstcamera</path>
+            <path>vstcamera2</path>
+        </cameras>
+    </video_see_through>
+
+    <StereoCameraVR>
+
+        <camera_calibration>
+            <window_size>10</window_size>
+            <left>
+                1.0000 0.0008 -0.0100 -0.0336 -0.0006 0.9999 0.0125 0.1178 0.0100   -0.0125 0.9999 -0.0053 0 0 0 1.0000
+            </left>
+            <right>
+                0.99995 0.00076076 -0.0099992 0.030199 -0.00063579 0.99992     0.012494 0.11771 0.010008 -0.012487 0.99987 -0.0045554 0 0 0 1
+            </right>
+        </camera_calibration>
+
+    </StereoCameraVR>
+
+</modules>

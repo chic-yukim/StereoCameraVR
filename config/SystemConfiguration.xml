@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+    <logging>
+        <level>info</level>
+    </logging>
+
+    <systemindex>1</systemindex>
+
+    <dynamic_modules>
+
+        <module>
+            <id>openvr</id>
+        </module>
+
+        <module>
+            <!-- <id>Advantech_QCAP</id> -->
+            <id>XiStream2</id>
+        </module>
+
+        <module>
+            <id>pinhole_camera</id>
+        </module>
+
+        <module>
+            <id>video_see_through</id>
+        </module>
+
+        <application>
+            <id>StereoCameraVR</id>
+        </application>
+
+    </dynamic_modules>
+</system>
