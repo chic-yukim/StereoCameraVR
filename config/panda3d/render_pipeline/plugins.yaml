@@ -25,14 +25,14 @@
 
 # stereo plugins
 enabled:
-    - bloom
+    #- bloom
     - color_correction
-    - forward_shading
-    - pssm
+    #- forward_shading
+    #- pssm
     - scattering
-    - sky_ao
+    #- sky_ao
     - openvr
-    - env_probes
+    #- env_probes
     - ar_render
 
 
