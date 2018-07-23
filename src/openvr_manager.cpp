@@ -25,6 +25,8 @@ OpenVRManager::OpenVRManager(rpcore::RenderPipeline& pipeline) : pipeline_(pipel
 
     openvr_plugin_ = static_cast<rpplugins::OpenVRPlugin*>(pipeline_.get_plugin_mgr()->get_instance("openvr")->downcast());
 
+    vr::VRSettings()->SetBool(vr::k_pch_SteamVR_Section, vr::k_pch_SteamVR_ForceFadeOnBadTracking_Bool, true);
+
     add_task([this](rppanda::FunctionalTask*) {
         process_controller_event();
         return AsyncTask::DoneStatus::DS_cont;
