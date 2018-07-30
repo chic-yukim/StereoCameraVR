@@ -10,6 +10,9 @@
 
 #include <render_pipeline/rpcore/globals.hpp>
 #include <render_pipeline/rppanda/showbase/showbase.hpp>
+#include <render_pipeline/rpcore/render_pipeline.hpp>
+#include <render_pipeline/rpcore/stage_manager.hpp>
+#include <render_pipeline/rpcore/render_stage.hpp>
 
 #include <crsf/RenderingEngine/TGraphicRenderEngine.h>
 #include <crsf/CRModel/TWorld.h>
@@ -56,6 +59,9 @@ CHICCamManager::CHICCamManager(rpcore::RenderPipeline& pipeline, const boost::pr
     cam_to_hmd_[1].transpose_in_place();
 
     controller_mat_window_size_ = props_.get<size_t>("camera_calibration.window_size", 1);
+
+    float ratio = props_.get<float>("ratio", 1.0f);
+    pipeline_.get_stage_mgr()->get_stage("ARCompositeStage")->set_shader_input(ShaderInput("ar_camera_color_ratio", LVecBase4f(ratio, 0, 0, 0)));
 
     accept("CHICCamManager::inc_window_size", [this](const Event* ev) { ++controller_mat_window_size_; std::cout << controller_mat_window_size_ << std::endl; });
     accept("CHICCamManager::dec_window_size", [this](const Event* ev) { controller_mat_window_size_ = (std::max)(1llu, controller_mat_window_size_ - 1); std::cout << controller_mat_window_size_ << std::endl; });
