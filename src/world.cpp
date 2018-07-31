@@ -26,15 +26,15 @@ World::~World()
 
 void World::start()
 {
-    openvr_manager_ = new OpenVRManager(pipeline_);
+    openvr_manager_ = std::make_unique<OpenVRManager>(pipeline_);
     if (!openvr_manager_->is_available())
     {
-        openvr_manager_.clear();
+        openvr_manager_.reset();
     }
 
-    chic_cam_manager_ = new CHICCamManager(pipeline_, props_);
+    chic_cam_manager_ = std::make_unique<CHICCamManager>(pipeline_, props_);
     if (!chic_cam_manager_->is_available())
-        chic_cam_manager_.clear();
+        chic_cam_manager_.reset();
 
     setup_event();
 }

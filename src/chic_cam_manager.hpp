@@ -28,8 +28,6 @@ public:
     CHICCamManager(rpcore::RenderPipeline& pipeline, const boost::property_tree::ptree& props);
     virtual ~CHICCamManager();
 
-    ALLOC_DELETED_CHAIN(CHICCamManager);
-
     bool is_available() const;
 
 private:

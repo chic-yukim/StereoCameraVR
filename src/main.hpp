@@ -1,7 +1,5 @@
 #pragma once
 
-#include <pointerTo.h>
-
 #include <crsf/CRAPI/TDynamicModuleInterface.h>
 
 class World;
@@ -16,5 +14,5 @@ public:
     void OnExit() override;
 
 private:
-    PT(World) world_;
+    std::unique_ptr<World> world_;
 };

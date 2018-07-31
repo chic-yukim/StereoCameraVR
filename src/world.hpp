@@ -28,8 +28,6 @@ public:
     World(rpcore::RenderPipeline& pipeline, const boost::property_tree::ptree& props);
     virtual ~World();
 
-    ALLOC_DELETED_CHAIN(World);
-
     void start();
 
 private:
@@ -40,6 +38,6 @@ private:
     rpcore::RenderPipeline& pipeline_;
     std::unique_ptr<rpcore::MovementController> controller_;
 
-    PT(OpenVRManager) openvr_manager_;
-    PT(CHICCamManager) chic_cam_manager_;
+    std::unique_ptr<OpenVRManager> openvr_manager_;
+    std::unique_ptr<CHICCamManager> chic_cam_manager_;
 };
