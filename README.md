@@ -1,4 +1,1 @@
-# 더위 사냥
-
-1. Config 폴더 설정
-   - mklink /J config [config-...]
+# 스테레오 카메라 VR 단독 어플리케이션
