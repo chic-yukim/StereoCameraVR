@@ -1,7 +1,18 @@
 #include "main.hpp"
-#include "world.hpp"
+
+#include <spdlog/logger.h>
+
+#include <render_pipeline/rppanda/showbase/showbase.hpp>
+#include <render_pipeline/rpcore/globals.hpp>
+#include <render_pipeline/rpcore/render_pipeline.hpp>
+#include <render_pipeline/rpcore/util/movement_controller.hpp>
+#include <render_pipeline/rpcore/pluginbase/day_manager.hpp>
 
 #include <crsf/RenderingEngine/TGraphicRenderEngine.h>
+
+#include "openvr_manager.hpp"
+#include "chic_cam_manager.hpp"
+#include "utils.hpp"
 
 CRSEEDLIB_MODULE_CREATOR(StereoCameraVR);
 
@@ -11,15 +22,16 @@ spdlog::logger* global_logger = nullptr;
 StereoCameraVR::StereoCameraVR(void): crsf::TDynamicModuleInterface(CRMODULE_ID_STRING)
 {
     global_logger = m_logger.get();
+
+    rendering_engine_ = crsf::TGraphicRenderEngine::GetInstance();
+    pipeline_ = rendering_engine_->GetRenderPipeline();
 }
+
+StereoCameraVR::~StereoCameraVR() = default;
 
 void StereoCameraVR::OnLoad(void)
 {
-    auto rendering_engine = crsf::TGraphicRenderEngine::GetInstance();
-
-    world_ = std::make_unique<World>(
-        *rendering_engine->GetRenderPipeline(),
-        m_property);
+    pipeline_->get_daytime_mgr()->set_time("10:30");
 }
 
 void StereoCameraVR::OnStart(void)
@@ -28,10 +40,27 @@ void StereoCameraVR::OnStart(void)
 
     rendering_engine->SetWindowTitle(CRMODULE_ID_STRING);
 
-    world_->start();
+    openvr_manager_ = std::make_unique<OpenVRManager>(*pipeline_);
+    if (!openvr_manager_->is_available())
+    {
+        openvr_manager_.reset();
+
+        rendering_engine_->EnableControl();
+        rendering_engine_->SetControllerInitialPosHpr(
+            LVecBase3(0.0f, -2.2f, 1.0f),
+            LVecBase3(0.0f, -25.0f, 0.0f));
+        rendering_engine_->ResetControllerInitial();
+    }
+
+    chic_cam_manager_ = std::make_unique<CHICCamManager>(*pipeline_, m_property);
+    if (!chic_cam_manager_->is_available())
+        chic_cam_manager_.reset();
 }
 
 void StereoCameraVR::OnExit(void)
 {
-    world_.reset();
+    remove_all_tasks();
+
+    chic_cam_manager_.reset();
+    openvr_manager_.reset();
 }

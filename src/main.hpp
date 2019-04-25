@@ -2,17 +2,33 @@
 
 #include <crsf/CRAPI/TDynamicModuleInterface.h>
 
-class World;
+#include <render_pipeline/rppanda/showbase/direct_object.hpp>
 
-class StereoCameraVR : public crsf::TDynamicModuleInterface
+class OpenVRManager;
+class CHICCamManager;
+
+namespace rpcore {
+class RenderPipeline;
+}
+
+namespace crsf {
+class TGraphicRenderEngine;
+}
+
+class StereoCameraVR : public crsf::TDynamicModuleInterface, public rppanda::DirectObject
 {
 public:
     StereoCameraVR();
+    ~StereoCameraVR() override;
 
     void OnLoad() override;
     void OnStart() override;
     void OnExit() override;
 
 private:
-    std::unique_ptr<World> world_;
+    rpcore::RenderPipeline* pipeline_;
+    crsf::TGraphicRenderEngine* rendering_engine_;
+
+    std::unique_ptr<OpenVRManager> openvr_manager_;
+    std::unique_ptr<CHICCamManager> chic_cam_manager_;
 };

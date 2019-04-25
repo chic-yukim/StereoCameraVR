@@ -16,8 +16,6 @@ set(source_src
     "${PROJECT_SOURCE_DIR}/src/main.hpp"
     "${PROJECT_SOURCE_DIR}/src/openvr_manager.cpp"
     "${PROJECT_SOURCE_DIR}/src/openvr_manager.hpp"
-    "${PROJECT_SOURCE_DIR}/src/world.cpp"
-    "${PROJECT_SOURCE_DIR}/src/world.hpp"
     "${PROJECT_SOURCE_DIR}/src/utils.cpp"
     "${PROJECT_SOURCE_DIR}/src/utils.hpp"
 )
