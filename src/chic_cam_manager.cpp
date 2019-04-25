@@ -20,19 +20,35 @@
 #include <crsf/RenderingEngine/GraphicRenderEngine/TTexture.h>
 #include <crsf/CoexistenceInterface/TImageMemoryObject.h>
 #include <crsf/CREngine/TDynamicModuleManager.h>
+#include <crsf/CRAPI/TVersion.h>
+
+#include "crmodules/pinhole_camera/module.hpp"
 
 #include "utils.hpp"
 
 CHICCamManager::CHICCamManager(rpcore::RenderPipeline& pipeline, const boost::property_tree::ptree& props) :
     RPObject("CHICCamManager"), pipeline_(pipeline), props_(props)
 {
-    if (!is_available())
+    auto dmm = crsf::TDynamicModuleManager::GetInstance();
+    if (!dmm->IsModuleEnabled("pinhole_camera"))
         return;
 
-    if (bool SYNC_CAMERA_IMAGE = false)
+    pinhole_camera_module_ = dynamic_cast<PinholeCameraModule*>(dmm->GetModuleInstance("pinhole_camera").get());
+    if (pinhole_camera_module_->get_camera_count() < 2)
+    {
+        pinhole_camera_module_ = nullptr;
+        error("Failed to find stereo camera.");
+        return;
+    }
+
+    cam_left_ = pinhole_camera_module_->get_camera(0).get();
+    cam_right_ = pinhole_camera_module_->get_camera(1).get();
+
+    // SYNC_CAMERA_IMAGE
+    if (false)
     {
         //auto world = crsf::TGraphicRenderEngine::GetInstance()->GetWorld();
-        //auto cam = world->Find("vstcamera")->GetPtrOf<crsf::TPhysicalCamera>();
+        //auto cam = cam_left_->GetPtrOf<crsf::TPhysicalCamera>();
         //cam->GetTexture()->GetImageMemoryObject()->AttachImageListener("CHICCamManager::update", [this](crsf::TImageMemoryObject*) {
         //    update(nullptr);
         //});
@@ -73,7 +89,7 @@ CHICCamManager::~CHICCamManager() = default;
 
 bool CHICCamManager::is_available() const
 {
-    return crsf::TDynamicModuleManager::GetInstance()->IsModuleEnabled("pinhole_camera");
+    return pinhole_camera_module_ != nullptr;
 }
 
 AsyncTask::DoneStatus CHICCamManager::update(const rppanda::FunctionalTask* task)
@@ -85,7 +101,11 @@ AsyncTask::DoneStatus CHICCamManager::update(const rppanda::FunctionalTask* task
 
     auto controller = openvr_devices.find("vr_controller_vive*");
 
+#if CRSEEDLIB_VERSION_MAJOR == 3 && CRSEEDLIB_VERSION_MINOR < 3
     auto hmd_to_origin = openvr_devices.find("generic_hmd").get_mat();
+#else
+    auto hmd_to_origin = openvr_devices.find("device0").get_mat();
+#endif
 
     hmd_mat_window_.push_back(hmd_to_origin);
     controller_mat_window_.push_back(controller.get_mat());
@@ -104,8 +124,8 @@ AsyncTask::DoneStatus CHICCamManager::update(const rppanda::FunctionalTask* task
         controller_mat_window_.pop_front();
     }
 
-    cr_world->Find("vstcamera")->SetMatrix(cam_to_hmd_[0] * hmd_to_origin);
-    cr_world->Find("vstcamera2")->SetMatrix(cam_to_hmd_[1] * hmd_to_origin);
+    cam_left_->SetMatrix(cam_to_hmd_[0] * hmd_to_origin);
+    cam_right_->SetMatrix(cam_to_hmd_[1] * hmd_to_origin);
 
     auto cam = rpcore::Globals::base->get_cam(0);
     auto leye = cam.find("left_eye");
@@ -117,8 +137,8 @@ AsyncTask::DoneStatus CHICCamManager::update(const rppanda::FunctionalTask* task
     }
     else
     {
-        leye.set_mat(rpcore::Globals::render, cr_world->Find("vstcamera")->GetNodePath().get_mat(rpcore::Globals::render));
-        reye.set_mat(rpcore::Globals::render, cr_world->Find("vstcamera2")->GetNodePath().get_mat(rpcore::Globals::render));
+        leye.set_mat(rpcore::Globals::render, cam_left_->GetNodePath().get_mat(rpcore::Globals::render));
+        reye.set_mat(rpcore::Globals::render, cam_right_->GetNodePath().get_mat(rpcore::Globals::render));
     }
 
     return AsyncTask::DS_cont;

@@ -22,6 +22,12 @@ namespace rpcore {
 class RenderPipeline;
 }
 
+namespace crsf {
+class TPhysicalCamera;
+}
+
+class PinholeCameraModule;
+
 class CHICCamManager : public rppanda::DirectObject, public rpcore::RPObject
 {
 public:
@@ -37,6 +43,10 @@ private:
 
     rpcore::RenderPipeline& pipeline_;
     const boost::property_tree::ptree& props_;
+    PinholeCameraModule* pinhole_camera_module_ = nullptr;
+
+    crsf::TPhysicalCamera* cam_left_;
+    crsf::TPhysicalCamera* cam_right_;
 
     // camera space to HMD space
     LMatrix4f cam_to_hmd_[2];

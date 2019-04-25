@@ -23,6 +23,7 @@ set(CRMODULE_INSTALL_DIR "${CRMODULE_ID}")
 include(FindPackages)
 
 render_pipeline_find_plugins("openvr;ar_render")
+CRSeedLib_FIND_MODULES("pinhole_camera")
 # ==================================================================================================
 
 # === target =======================================================================================
@@ -50,14 +51,14 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME}
-    PRIVATE "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    PRIVATE "${PROJECT_SOURCE_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE $<$<NOT:$<BOOL:${Boost_USE_STATIC_LIBS}>>:Boost::dynamic_linking>
     CRSeedLib fmt::fmt-header-only spdlog::spdlog
     rpplugins::openvr rpplugins::ar_render
+    crmodule::pinhole_camera
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

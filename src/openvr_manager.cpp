@@ -16,7 +16,7 @@
 #include <render_pipeline/rpcore/loader.hpp>
 #include <render_pipeline/rpcore/util/rptextnode.hpp>
 
-#include <openvr_plugin.hpp>
+#include <rpplugins/openvr/plugin.hpp>
 
 #include <crsf/CRModel/TWorldObject.h>
 
