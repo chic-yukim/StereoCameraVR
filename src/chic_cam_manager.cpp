@@ -8,6 +8,8 @@
 
 #include <fmt/ostream.h>
 
+#include <boost/property_tree/xml_parser.hpp>
+
 #include <render_pipeline/rpcore/globals.hpp>
 #include <render_pipeline/rppanda/showbase/showbase.hpp>
 #include <render_pipeline/rpcore/render_pipeline.hpp>
@@ -21,6 +23,7 @@
 #include <crsf/CoexistenceInterface/TImageMemoryObject.h>
 #include <crsf/CREngine/TDynamicModuleManager.h>
 #include <crsf/CRAPI/TVersion.h>
+#include <crsf/System/TSystemConfiguration.h>
 
 #include "crmodules/pinhole_camera/module.hpp"
 
@@ -29,6 +32,29 @@
 CHICCamManager::CHICCamManager(rpcore::RenderPipeline& pipeline, const boost::property_tree::ptree& props) :
     RPObject("CHICCamManager"), pipeline_(pipeline), props_(props)
 {
+    boost::property_tree::ptree parameter_props;
+
+    const boost::filesystem::path parameter_filepath(props_.get("camera_calibration.parameter_filepath", std::string("")));
+    if (boost::filesystem::exists(parameter_filepath))
+    {
+        try
+        {
+            boost::property_tree::read_xml(parameter_filepath.generic_string(), parameter_props,
+                boost::property_tree::xml_parser::no_comments | boost::property_tree::xml_parser::trim_whitespace);
+
+        }
+        catch (const std::exception& err)
+        {
+            error(err.what());
+            return;
+        }
+    }
+    else
+    {
+        error(fmt::format("File ({}) does NOT exist!", parameter_filepath.generic_string()));
+        return;
+    }
+
     auto dmm = crsf::TDynamicModuleManager::GetInstance();
     if (!dmm->IsModuleEnabled("pinhole_camera"))
         return;
@@ -60,15 +86,9 @@ CHICCamManager::CHICCamManager(rpcore::RenderPipeline& pipeline, const boost::pr
         }, "CHICCamManager::update", -40);
     }
 
-    static const std::string identity_string(
-        "1 0 0 0 "
-        "0 1 0 0 "
-        "0 0 1 0 "
-        "0 0 0 1");
-
     // row major
-    cam_to_hmd_[0] = parse_to_mat4(props_.get("camera_calibration.left", identity_string), LMatrix4f::ident_mat());
-    cam_to_hmd_[1] = parse_to_mat4(props_.get("camera_calibration.right", identity_string), LMatrix4f::ident_mat());
+    cam_to_hmd_[0] = parse_to_mat4(parameter_props.get("parameters.left.transform_to_hmd", std::string()), LMatrix4f::ident_mat());
+    cam_to_hmd_[1] = parse_to_mat4(parameter_props.get("parameters.right.transform_to_hmd", std::string()), LMatrix4f::ident_mat());
 
     // row to column
     cam_to_hmd_[0].transpose_in_place();
