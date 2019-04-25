@@ -26,8 +26,12 @@ public:
     void OnExit() override;
 
 private:
+    friend class MainGUI;
+
     rpcore::RenderPipeline* pipeline_;
     crsf::TGraphicRenderEngine* rendering_engine_;
+
+    std::unique_ptr<MainGUI> main_gui_;
 
     std::unique_ptr<OpenVRManager> openvr_manager_;
     std::unique_ptr<CHICCamManager> chic_cam_manager_;

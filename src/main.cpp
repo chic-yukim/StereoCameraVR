@@ -10,6 +10,7 @@
 
 #include <crsf/RenderingEngine/TGraphicRenderEngine.h>
 
+#include "main_gui/main_gui.hpp"
 #include "openvr_manager.hpp"
 #include "chic_cam_manager.hpp"
 #include "utils.hpp"
@@ -55,10 +56,14 @@ void MainApp::OnStart(void)
     chic_cam_manager_ = std::make_unique<CHICCamManager>(*pipeline_, m_property);
     if (!chic_cam_manager_->is_available())
         chic_cam_manager_.reset();
+
+    main_gui_= std::make_unique<MainGUI>(*this);
 }
 
 void MainApp::OnExit(void)
 {
+    main_gui_.reset();
+
     remove_all_tasks();
 
     chic_cam_manager_.reset();

@@ -22,6 +22,9 @@ set(CRMODULE_INSTALL_DIR "${CRMODULE_ID}")
 # === project specific packages ===
 include(FindPackages)
 
+find_package(imgui CONFIG REQUIRED)
+set_target_properties(imgui::imgui PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
+
 render_pipeline_find_plugins("openvr;ar_render")
 CRSeedLib_FIND_MODULES("pinhole_camera")
 # ==================================================================================================
@@ -57,7 +60,10 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE $<$<NOT:$<BOOL:${Boost_USE_STATIC_LIBS}>>:Boost::dynamic_linking>
     CRSeedLib fmt::fmt-header-only spdlog::spdlog
+    imgui::imgui
+
     rpplugins::openvr rpplugins::ar_render
+
     crmodule::pinhole_camera
 )
 
