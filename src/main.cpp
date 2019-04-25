@@ -14,12 +14,12 @@
 #include "chic_cam_manager.hpp"
 #include "utils.hpp"
 
-CRSEEDLIB_MODULE_CREATOR(StereoCameraVR);
+CRSEEDLIB_MODULE_CREATOR(MainApp);
 
 // ************************************************************************************************
 spdlog::logger* global_logger = nullptr;
 
-StereoCameraVR::StereoCameraVR(void): crsf::TDynamicModuleInterface(CRMODULE_ID_STRING)
+MainApp::MainApp(void): crsf::TDynamicModuleInterface(CRMODULE_ID_STRING)
 {
     global_logger = m_logger.get();
 
@@ -27,14 +27,14 @@ StereoCameraVR::StereoCameraVR(void): crsf::TDynamicModuleInterface(CRMODULE_ID_
     pipeline_ = rendering_engine_->GetRenderPipeline();
 }
 
-StereoCameraVR::~StereoCameraVR() = default;
+MainApp::~MainApp() = default;
 
-void StereoCameraVR::OnLoad(void)
+void MainApp::OnLoad(void)
 {
     pipeline_->get_daytime_mgr()->set_time("10:30");
 }
 
-void StereoCameraVR::OnStart(void)
+void MainApp::OnStart(void)
 {
     auto rendering_engine = crsf::TGraphicRenderEngine::GetInstance();
 
@@ -57,7 +57,7 @@ void StereoCameraVR::OnStart(void)
         chic_cam_manager_.reset();
 }
 
-void StereoCameraVR::OnExit(void)
+void MainApp::OnExit(void)
 {
     remove_all_tasks();
 

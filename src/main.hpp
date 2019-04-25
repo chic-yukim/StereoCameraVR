@@ -15,11 +15,11 @@ namespace crsf {
 class TGraphicRenderEngine;
 }
 
-class StereoCameraVR : public crsf::TDynamicModuleInterface, public rppanda::DirectObject
+class MainApp : public crsf::TDynamicModuleInterface, public rppanda::DirectObject
 {
 public:
-    StereoCameraVR();
-    ~StereoCameraVR() override;
+    MainApp();
+    ~MainApp() override;
 
     void OnLoad() override;
     void OnStart() override;
