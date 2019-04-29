@@ -10,7 +10,7 @@
     <pinhole_camera>
         <!-- HMD: LHR-24956881 -->
         <stereo_camera>
-            <input_interface>vst_camera</input_interface>
+            <input_image_memory_object>vst_image</input_image_memory_object>
             <parameter_filepath>resources/chic_cam/LHR-00000000/cameraParameter.xml</parameter_filepath>
             <left>
                 <name>vstcamera</name>

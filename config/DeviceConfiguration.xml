@@ -3,7 +3,7 @@
     <image>
         <enable>true</enable>
         <inputinterface>vst_camera</inputinterface>
-        <outputinterface>Image1</outputinterface>
+        <outputinterface>vst_image</outputinterface>
         <fps>30</fps>
         <pixel>RGB_LINEAR</pixel>
         <width>1940</width>
